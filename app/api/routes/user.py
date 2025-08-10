@@ -7,6 +7,7 @@ from app.api.deps import get_current_user
 from app.database.database import get_db
 from app.repositories.users import UserRepository
 from app.schemas.account import AccountResponse
+from app.schemas.payment import PaymentResponse
 from app.schemas.user import UserResponse
 from app.services.users import get_user
 
@@ -26,3 +27,11 @@ async def get_accounts(
 ):
     accounts = await UserRepository(db).get_user_accounts(user.get("email"))
     return accounts
+
+
+@router.get("/payments", status_code=200, response_model=List[PaymentResponse])
+async def get_payments(
+    user: dict = Depends(get_current_user), db: AsyncSession = Depends(get_db)
+):
+    payments = await UserRepository(db).get_user_payments(user.get("email"))
+    return payments

@@ -10,7 +10,7 @@ from app.models.base import Base
 class Payment(Base):
     __tablename__ = 'payments'
 
-    transaction_id: Mapped[int] = mapped_column(unique=True, nullable=False)
+    transaction_id: Mapped[str] = mapped_column(unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(
         ForeignKey('users.id', ondelete="CASCADE"), nullable=False
     )

@@ -1,8 +1,11 @@
+from typing import Any, Coroutine
+
 from pydantic import EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Mapped
 
-from app.models import User
+from app.models import User, Account
 from app.schemas.user import UserCreate
 
 
@@ -22,6 +25,10 @@ class UserRepository:
         await self.db.refresh(user)
         return user
 
-    async def get_user_accounts(self, email: EmailStr):
+    async def get_user_accounts(self, email: EmailStr) -> Mapped[list[Any]]:
         user = await self.get_by_email(email)
         return user.accounts
+
+    async def get_user_payments(self, email: EmailStr) -> Mapped[list[Any]]:
+        user = await self.get_by_email(email)
+        return user.payments
