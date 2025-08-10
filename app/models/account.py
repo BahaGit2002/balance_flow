@@ -18,14 +18,14 @@ class Account(Base):
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
-    users: Mapped["User"] = relationship(
+    user: Mapped["User"] = relationship(
         "User",
-        back_populates="account",
+        back_populates="accounts",
         lazy="joined",
     )
     payments: Mapped[list["Payment"]] = relationship(
         "Payment",
-        back_populates="user",
+        back_populates="account",
         cascade="none",
         lazy="selectin",
     )
