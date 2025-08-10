@@ -1,7 +1,4 @@
-from typing import Any, Coroutine
-
 from fastapi import HTTPException, status
-from pydantic import EmailStr
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,7 +21,9 @@ async def register_user(user: UserCreate, db: AsyncSession) -> User:
 
 async def login_user(user: UserLogin, db: AsyncSession) -> User:
     existing_user = await UserRepository(db).get_by_email(user.email)
-    if not existing_user or not verify_password(user.password, hash_password(user.password)):
+    if not existing_user or not verify_password(
+            user.password, hash_password(user.password)
+    ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",
@@ -32,7 +31,8 @@ async def login_user(user: UserLogin, db: AsyncSession) -> User:
     return existing_user
 
 
-async def get_user(email: EmailStr, db: AsyncSession) -> UserResponse:
+async def get_user(user: dict, db: AsyncSession) -> UserResponse:
+    email = user.get("email")
     user = await UserRepository(db).get_by_email(email)
     if not user:
         raise HTTPException(

@@ -9,6 +9,7 @@ from app.models.base import Base
 class Account(Base):
     __tablename__ = "accounts"
 
+    account_number: Mapped[str] = mapped_column(unique=True, nullable=False)
     balance: Mapped[Decimal] = mapped_column(
         Numeric(precision=10, scale=2),
         default=Decimal(0.00),

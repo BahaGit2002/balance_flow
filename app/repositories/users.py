@@ -21,3 +21,7 @@ class UserRepository:
         await self.db.commit()
         await self.db.refresh(user)
         return user
+
+    async def get_user_accounts(self, email: EmailStr):
+        user = await self.get_by_email(email)
+        return user.accounts

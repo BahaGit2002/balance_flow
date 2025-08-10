@@ -1,18 +1,10 @@
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Request, HTTPException, status
 
-from app.config.security import decode_jwt
-
-security = HTTPBearer()
+from app.models import User
 
 
-def get_current_user(credential: HTTPAuthorizationCredentials = Depends(security)):
-    token = credential.credentials
-    payload = decode_jwt(token)
-    user_id = payload.get("user_id")
-    if not user_id:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid authentication credentials",
-        )
-    return payload
+async def get_current_user(request: Request) -> User:
+    user = getattr(request.state, "user", None)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    return user
