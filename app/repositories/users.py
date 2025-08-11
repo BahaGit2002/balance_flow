@@ -1,4 +1,4 @@
-from typing import Any, Coroutine
+from typing import Any
 
 from pydantic import EmailStr
 from sqlalchemy import select
@@ -13,6 +13,9 @@ class UserRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
 
+    async def get_by_id(self, ID: int) -> User | None:
+        result = await self.db.execute(select(User).where(User.id == ID))
+        return result.scalar_one_or_none()
 
     async def get_by_email(self, email: EmailStr) -> User | None:
         result = await self.db.execute(select(User).where(User.email == email))
@@ -24,10 +27,6 @@ class UserRepository:
         await self.db.commit()
         await self.db.refresh(user)
         return user
-
-    async def get_user_accounts(self, email: EmailStr) -> Mapped[list[Any]]:
-        user = await self.get_by_email(email)
-        return user.accounts
 
     async def get_user_payments(self, email: EmailStr) -> Mapped[list[Any]]:
         user = await self.get_by_email(email)
