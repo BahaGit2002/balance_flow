@@ -8,5 +8,6 @@ class AccountResponse(BaseModel):
     account_number: str
     balance: Decimal
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True,
+    }
