@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://root:2D*QgVdv8r9V@db:5432/balance_flow_db
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - fastapi-network
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=2D*QgVdv8r9V
+      - POSTGRES_DB=balance_flow_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fastapi-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fastapi-network:
+    driver: bridge
