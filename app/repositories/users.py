@@ -1,11 +1,10 @@
-from typing import Any
+from typing import Sequence
 
 from pydantic import EmailStr
-from sqlalchemy import select
+from sqlalchemy import select, Row, RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Mapped
 
-from app.models import User, Account
+from app.models import User
 from app.schemas.user import UserCreate, UserUpdate
 
 
@@ -44,3 +43,7 @@ class UserRepository:
             raise ValueError("User not found")
         await self.db.delete(user)
         await self.db.commit()
+
+    async def get_all(self) -> Sequence[User]:
+        result = await self.db.execute(select(User).where(User.is_admin == False))
+        return result.scalars().all()

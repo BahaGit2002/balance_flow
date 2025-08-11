@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import User
