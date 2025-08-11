@@ -13,11 +13,7 @@ router = APIRouter()
 
 @router.get("/me", status_code=200, response_model=UserResponse)
 async def get_me(user: User = Depends(get_current_user)):
-    return UserResponse(
-        id=user.id,
-        full_name=user.full_name,
-        email=user.email,
-    )
+    return UserResponse.model_validate(user)
 
 
 @router.get("/accounts", status_code=200, response_model=List[AccountResponse])

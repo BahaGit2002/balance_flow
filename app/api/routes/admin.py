@@ -25,7 +25,7 @@ async def get_me(
     user: User = Depends(get_current_user),
     _: None = Depends(admin_required),
 ):
-    return UserResponse.from_orm(user)
+    return UserResponse.model_validate(user)
 
 
 @router.post("/users", status_code=201, response_model=UserResponse)
@@ -35,7 +35,7 @@ async def create_user(
     db: AsyncSession = Depends(get_db)
 ):
     user = await create_user_services(user, db)
-    return UserResponse.from_orm(user)
+    return UserResponse.model_validate(user)
 
 
 @router.put("/users/{user_id}", status_code=200, response_model=UserResponse)
@@ -46,7 +46,7 @@ async def update_user(
     db: AsyncSession = Depends(get_db),
 ):
     user = await update_user_service(user_id, user, db)
-    return UserResponse.from_orm(user)
+    return UserResponse.model_validate(user)
 
 
 @router.delete("/users/{user_id}", status_code=204)

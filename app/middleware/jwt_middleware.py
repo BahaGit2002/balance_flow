@@ -8,7 +8,9 @@ async def jwt_middleware(request, call_next):
             "/auth"
     ) or request.url.path.startswith(
         "/docs"
-    ) or request.url.path.startswith("/openapi.json")):
+    ) or request.url.path.startswith(
+        "/openapi.json"
+    ) or request.url.path.startswith("/webhook")):
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
