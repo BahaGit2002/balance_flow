@@ -16,6 +16,14 @@ class UserCreate(UserLogin):
         from_attributes = True
 
 
+class UserUpdate(BaseModel):
+    full_name: str
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
+
 class UserResponse(BaseModel):
     id: int
     full_name: str

@@ -7,7 +7,9 @@ from app.models import User
 from app.repositories.users import UserRepository
 
 
-async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)) -> User:
+async def get_current_user(
+    request: Request, db: AsyncSession = Depends(get_db)
+) -> User:
     payload = getattr(request.state, "user", None)
     if not payload:
         raise HTTPException(
