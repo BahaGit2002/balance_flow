@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,8 +8,14 @@ from app.api.deps import get_current_user, admin_required
 from app.database.database import get_db
 from app.models import User
 from app.repositories.users import UserRepository
-from app.schemas.user import UserResponse, UserCreate, UserUpdate
-from app.services.admin import create_user as create_user_services, update_user as update_user_service
+from app.schemas.user import (
+    UserResponse, UserCreate, UserUpdate,
+    UserListResponse,
+)
+from app.services.admin import (
+    create_user as create_user_services,
+    update_user as update_user_service,
+)
 
 router = APIRouter()
 
@@ -18,7 +26,6 @@ async def get_me(
     _: None = Depends(admin_required),
 ):
     return UserResponse.from_orm(user)
-
 
 
 @router.post("/users", status_code=201, response_model=UserResponse)
@@ -50,3 +57,12 @@ async def delete_user(
 ):
     await UserRepository(db).delete(user_id)
     return
+
+
+@router.get("/users", status_code=200, response_model=List[UserListResponse])
+async def get_users(
+    _: None = Depends(admin_required),
+    db: AsyncSession = Depends(get_db),
+):
+    users = await UserRepository(db).get_all()
+    return users
