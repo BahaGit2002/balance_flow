@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import User
 from app.repositories.users import UserRepository
-from app.schemas.user import UserCreate, UserLogin, UserResponse
+from app.schemas.user import UserCreate, UserLogin
 from app.config.security import hash_password, verify_password
 
 
@@ -29,18 +29,3 @@ async def login_user(user: UserLogin, db: AsyncSession) -> User:
             detail="Invalid email or password.",
         )
     return existing_user
-
-
-async def get_user(user: dict, db: AsyncSession) -> UserResponse:
-    email = user.get("email")
-    user = await UserRepository(db).get_by_email(email)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with email {email} not found.",
-        )
-    return UserResponse(
-        id=user.id,
-        email=user.email,
-        full_name=user.full_name,
-    )
