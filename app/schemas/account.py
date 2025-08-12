@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class AccountResponse(BaseModel):
@@ -8,6 +8,4 @@ class AccountResponse(BaseModel):
     account_number: str
     balance: Decimal
 
-    model_config = {
-        "from_attributes": True,
-    }
+    model_config = ConfigDict(from_attributes=True)

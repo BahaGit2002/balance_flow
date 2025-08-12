@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 from app.schemas.account import AccountResponse
 from app.schemas.payment import PaymentResponse
@@ -8,26 +8,18 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserCreate(UserLogin):
     full_name: str
-
-    model_config = {
-        "from_attributes": True
-    }
 
 
 class UserUpdate(BaseModel):
     full_name: str
     email: EmailStr
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserResponse(BaseModel):
@@ -35,17 +27,13 @@ class UserResponse(BaseModel):
     full_name: str
     email: EmailStr
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Token(BaseModel):
     access_token: str
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserListResponse(UserResponse):
