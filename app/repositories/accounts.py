@@ -24,7 +24,7 @@ class AccountRepository:
         return result.scalar_one_or_none()
 
     async def create(self, user_id: int, account_id: int, amount: Decimal) -> Account:
-        account_number = await generate_account_number()
+        account_number = generate_account_number()
         account = Account(
             id=account_id,
             user_id=user_id,
