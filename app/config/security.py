@@ -1,11 +1,9 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
-from asyncpg.pgproto.pgproto import timedelta
 from fastapi import HTTPException, status
 from passlib.context import CryptContext
 import jwt
 
-from app.models import User
 from app.config.settings import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -28,7 +26,7 @@ def create_jwt(data: dict) -> str:
     )
 
 
-def decode_jwt(token: str) -> User:
+def decode_jwt(token: str) -> dict:
     try:
         return jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]

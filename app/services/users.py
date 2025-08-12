@@ -22,7 +22,7 @@ async def register_user(user: UserCreate, db: AsyncSession) -> User:
 async def login_user(user: UserLogin, db: AsyncSession) -> User:
     existing_user = await UserRepository(db).get_by_email(user.email)
     if not existing_user or not verify_password(
-            user.password, hash_password(user.password)
+            user.password, existing_user.password
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
