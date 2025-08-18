@@ -46,26 +46,12 @@
    docker-compose up --build
    ```
 
-3. **Примените миграции:**
+3. **Примените миграции (создаст тестовые данные автоматически):**
    ```bash
    docker-compose exec app alembic upgrade head
    ```
 
-4. **Создайте первого администратора:**
-   ```bash
-   curl -X POST "http://localhost:8000/auth/register" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "full_name": "Администратор",
-          "email": "admin@example.com",
-          "password": "admin123"
-        }'
-   ```
-
-5. **Обновите пользователя до администратора в базе данных:**
-   ```bash
-   docker-compose exec db psql -U root -d balance_flow_db -c "UPDATE users SET is_admin = true WHERE email = 'admin@example.com';"
-   ```
+Готово! Приложение доступно по адресу http://localhost:8000
 
 ### Вариант 2: Локальный запуск
 
@@ -101,7 +87,7 @@
      postgres:15
    ```
 
-4. **Примените миграции:**
+4. **Примените миграции (создаст тестовые данные автоматически):**
    ```bash
    poetry run alembic upgrade head
    ```
@@ -111,40 +97,21 @@
    poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
    ```
 
-6. **Создайте первого администратора:**
-   ```bash
-   curl -X POST "http://localhost:8000/auth/register" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "full_name": "Администратор",
-          "email": "admin@example.com",
-          "password": "admin123"
-        }'
-   ```
-
-7. **Обновите пользователя до администратора:**
-   ```bash
-   docker exec -it postgres psql -U root -d balance_flow_db -c "UPDATE users SET is_admin = true WHERE email = 'admin@example.com';"
-   ```
+Готово! Приложение доступно по адресу http://localhost:8000
 
 ## Учетные данные по умолчанию
 
-После создания первого администратора вы можете использовать следующие учетные данные:
+После применения миграций автоматически создаются следующие тестовые пользователи:
 
 ### Администратор
-- **Email:** admin@example.com
-- **Password:** admin123
+- **Email:** testadmin@test.com
+- **Password:** testadminpassword
+- **Баланс аккаунта:** 200.00
 
-### Создание обычного пользователя
-```bash
-curl -X POST "http://localhost:8000/auth/register" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "full_name": "Пользователь",
-       "email": "user@example.com",
-       "password": "user123"
-     }'
-```
+### Обычный пользователь
+- **Email:** testuser@test.com
+- **Password:** testuserpassword
+- **Баланс аккаунта:** 100.00
 
 ## API Endpoints
 
@@ -208,7 +175,9 @@ docker-compose down
 
 ### Локальный запуск
 ```bash
-
+# Остановите uvicorn (Ctrl+C)
+# Остановите PostgreSQL
 docker stop postgres
 docker rm postgres
 ```
+

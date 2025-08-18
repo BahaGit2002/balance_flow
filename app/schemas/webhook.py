@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class Webhook(BaseModel):
@@ -10,6 +10,4 @@ class Webhook(BaseModel):
     amount: Decimal
     signature: str
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
