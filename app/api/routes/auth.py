@@ -13,7 +13,7 @@ router = APIRouter()
 @router.post("/register",status_code=201, response_model=Token)
 async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     user = await register_user(user, db)
-    access_token = create_jwt({"user_id": user.id})
+    access_token = create_jwt({"user_id": user.id, "email": user.email})
     return Token(access_token=access_token)
 
 
