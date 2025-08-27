@@ -10,6 +10,8 @@ async def jwt_middleware(request, call_next):
         "/docs"
     ) or request.url.path.startswith(
         "/openapi.json"
+    ) or request.url.path.startswith(
+        "/scalar"
     ) or request.url.path.startswith("/webhook")):
         return await call_next(request)
 
