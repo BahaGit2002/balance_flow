@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_user, admin_required
+from app.api.deps import get_current_user, admin_required, swagger_auth
 from app.database.database import get_db
 from app.models import User
 from app.repositories.users import UserRepository
@@ -20,7 +20,10 @@ from app.services.admin import (
 router = APIRouter()
 
 
-@router.get("/me", status_code=200, response_model=UserResponse)
+@router.get(
+    "/me", status_code=200, response_model=UserResponse,
+    dependencies=[Depends(swagger_auth)]
+)
 async def get_me(
     user: User = Depends(get_current_user),
     _: None = Depends(admin_required),
@@ -28,7 +31,10 @@ async def get_me(
     return UserResponse.model_validate(user)
 
 
-@router.post("/users", status_code=201, response_model=UserResponse)
+@router.post(
+    "/users", status_code=201, response_model=UserResponse,
+    dependencies=[Depends(swagger_auth)]
+)
 async def create_user(
     user: UserCreate,
     _: None = Depends(admin_required),
@@ -38,7 +44,10 @@ async def create_user(
     return UserResponse.model_validate(user)
 
 
-@router.put("/users/{user_id}", status_code=200, response_model=UserResponse)
+@router.put(
+    "/users/{user_id}", status_code=200, response_model=UserResponse,
+    dependencies=[Depends(swagger_auth)]
+)
 async def update_user(
     user_id: int,
     user: UserUpdate,
@@ -49,7 +58,10 @@ async def update_user(
     return UserResponse.model_validate(user)
 
 
-@router.delete("/users/{user_id}", status_code=204)
+@router.delete(
+    "/users/{user_id}", status_code=204,
+    dependencies=[Depends(swagger_auth)]
+)
 async def delete_user(
     user_id: int,
     _: None = Depends(admin_required),
@@ -59,7 +71,10 @@ async def delete_user(
     return
 
 
-@router.get("/users", status_code=200, response_model=List[UserListResponse])
+@router.get(
+    "/users", status_code=200, response_model=List[UserListResponse],
+    dependencies=[Depends(swagger_auth)]
+)
 async def get_users(
     _: None = Depends(admin_required),
     db: AsyncSession = Depends(get_db),

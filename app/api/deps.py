@@ -1,10 +1,18 @@
 from fastapi import Request, HTTPException, status
 from fastapi.params import Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.database import get_db
 from app.models import User
 from app.repositories.users import UserRepository
+
+
+bearer_scheme = HTTPBearer(auto_error=False)
+
+
+def swagger_auth(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
+    return credentials
 
 
 async def get_current_user(

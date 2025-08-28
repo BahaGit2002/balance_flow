@@ -17,6 +17,8 @@ async def engine():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield engine
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
     await engine.dispose()
 
 
@@ -29,6 +31,7 @@ async def async_session(engine):
     )
     async with AsyncSessionLocal() as session:
         yield session
+        await session.rollback()
 
 
 @pytest.fixture(scope="function")
@@ -37,7 +40,7 @@ async def client(async_session):
         yield async_session
 
     app.dependency_overrides[get_db] = override_get_db
-
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+    app.dependency_overrides.clear()

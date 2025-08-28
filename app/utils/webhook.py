@@ -9,7 +9,7 @@ def verify_signature(
     user_id: int,
     signature: str,
 ) -> bool:
-    data_string = f"{account_id}{amount:.0f}{transaction_id}{user_id}{signature}"
+    data_string = f"{account_id}{amount:.0f}{transaction_id}{user_id}"
     computed_signature = hashlib.sha256(
         data_string.encode("utf-8")
     ).hexdigest()
